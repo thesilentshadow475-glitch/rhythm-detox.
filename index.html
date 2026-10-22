@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digital Rhythm Detox</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;600&display=swap">
+<style>
+:root{--bg:#f4efe6;--ink:#101a2e;--card:#fbf8f1;--bd:#e2dccd;--ac:#b84a12;--tl:#0e7c6b;--mu:#4a5568;--btn:#101a2e;--btnt:#f4efe6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a2e;--ink:#f4efe6;--card:#1b2a45;--bd:#2c3f63;--ac:#ff9d5c;--tl:#5ad1c0;--mu:#a9b4c8;--btn:#ff9d5c;--btnt:#101a2e}}
+:root[data-theme="dark"]{--bg:#101a2e;--ink:#f4efe6;--card:#1b2a45;--bd:#2c3f63;--ac:#ff9d5c;--tl:#5ad1c0;--mu:#a9b4c8;--btn:#ff9d5c;--btnt:#101a2e}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,Arial,sans-serif}
+main{max-width:960px;margin:0 auto;padding:32px 20px 64px;display:flex;flex-direction:column;gap:20px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.1;margin:0}
+h1{font-size:clamp(36px,7vw,60px)}h2{font-size:26px}
+.k{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--ac)}.sub{margin:12px 0 0;color:var(--mu);max-width:620px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+label{font-size:14px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+input,select,textarea{min-height:44px;padding:8px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}
+button{min-height:48px;padding:0 24px;border:none;border-radius:12px;background:var(--btn);color:var(--btnt);font:600 16px Inter,Arial,sans-serif;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+.st{margin:0;font-size:14px;color:var(--mu)}
+.top{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.top svg{width:120px;height:120px;flex:none}
+.bar{display:flex;gap:3px;height:64px;border-radius:12px;overflow:hidden}
+.seg{display:flex;align-items:center;justify-content:center;padding:0 6px;font-size:12px;font-weight:600;overflow:hidden;white-space:nowrap;border-radius:6px}
+.focus{background:#5ad1c0;color:#101a2e}.offline{background:#ff9d5c;color:#101a2e}.winddown{background:var(--ink);color:var(--bg)}.free{background:var(--bd);color:var(--ink)}
+.ax{display:flex;justify-content:space-between;font-size:13px;color:var(--mu)}
+.row{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--bd)}
+.row:first-child{border-top:none}.tm{min-width:120px;font-weight:600}.row p{margin:2px 0 0;color:var(--mu);font-size:14px}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;margin-left:8px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+@media (max-width:520px){.row{flex-direction:column;gap:2px}}
+</style>
+</head>
+<body>
+<main>
+<header><p class="k">REBOOT RHYTHM OF LIFE · AI</p><h1>Digital Rhythm Detox</h1><p class="sub">Tell the AI about your day. It builds a screen-light rhythm around your real schedule, then adapts it from your daily check-ins.</p></header>
+<form class="card" id="f">
+<h2>About your day</h2>
+<div class="grid">
+<label>Wake-up time<input type="time" id="wake" value="07:00" required></label>
+<label>Bedtime<input type="time" id="sleep" value="23:30" required></label>
+<label>Work or study starts<input type="time" id="ws" value="09:00" required></label>
+<label>Work or study ends<input type="time" id="we" value="17:00" required></label>
+<label>Screen hours per day<input type="number" id="hrs" min="0" max="18" step="0.5" value="7" required></label>
+<label>Biggest problem<select id="prob"><option value="late-night scrolling">Late-night scrolling</option><option value="constant notifications">Constant notifications</option><option value="can’t stay focused">Can’t stay focused</option><option value="a bit of everything">A bit of everything</option></select></label>
+</div>
+<label>Your goal (optional)<input type="text" id="goal" maxlength="140" placeholder="e.g. sleep earlier and read more"></label>
+<button type="submit" id="go">Build my rhythm</button>
+<p class="st" id="st" role="status"></p>
+</form>
+<section id="out" hidden style="display:flex;flex-direction:column;gap:20px">
+<div class="card"><div class="top"><svg role="img" aria-label="Rhythm score ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bd)" stroke-width="12"/><circle id="ring" cx="60" cy="60" r="52" fill="none" stroke="var(--tl)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 327" transform="rotate(-90 60 60)"/><text id="sc" x="60" y="72" text-anchor="middle" font-size="34" font-weight="600" fill="var(--ink)" font-family="Fraunces,Georgia,serif">0</text></svg><div style="flex:1;min-width:240px"><p class="k" id="src"></p><h2>Projected rhythm score</h2><p id="sum" style="margin:8px 0 0"></p><p class="st" id="tr"></p></div></div></div>
+<div class="card"><h2>Your day</h2><div class="bar" id="bar" role="img" aria-label="Timeline of your planned day"></div><div class="ax" id="ax"></div><div id="rows"></div></div>
+<div class="card"><h2>Tips from the AI</h2><ul id="tips"></ul></div>
+<form class="card" id="ci"><h2>Daily check-in</h2><label>How did today go?<textarea id="fb" rows="3" maxlength="400" placeholder="e.g. I couldn’t resist my phone after 10pm and the focus block felt too long"></textarea></label><button type="submit" id="ad">Adapt my plan</button><p class="st" id="st2" role="status"></p></form>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a))x==='class'?e.className=v:x==='style'?e.style.cssText=v:e[x]=v;k.flat().forEach(c=>e.append(c));return e};
+const toMin=t=>{const[h,m]=String(t).split(':').map(Number);return h*60+(m||0)};
+const fmt=m=>{m=((Math.round(m)%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+let profile=null,plan=null;
+
+function localPlan(p){
+  const w=toMin(p.wake);let s=toMin(p.sleep);if(s<=w)s+=1440;
+  const ws=toMin(p.ws),we=toMin(p.we),wl=/night/.test(p.prob)?90:60,mid=Math.round((ws+we)/2/15)*15;
+  return{summary:'Built-in planner: a phone-free morning, protected focus windows inside your work hours, a midday offline break and a wind-down before bed.',score:Math.max(30,Math.min(85,Math.round(100-p.hrs*6))),
+  blocks:[{start:fmt(w),end:fmt(w+45),type:'offline',label:'Phone-free morning',why:'Start the day before the feed does.'},
+  {start:fmt(ws),end:fmt(ws+150),type:'focus',label:'Focus window 1',why:'Notifications held back for deep work.'},
+  {start:fmt(mid),end:fmt(mid+60),type:'offline',label:'Offline break',why:'A real break resets attention.'},
+  {start:fmt(mid+60),end:fmt(Math.min(mid+180,we)),type:'focus',label:'Focus window 2',why:'Second protected block.'},
+  {start:fmt(s-wl),end:fmt(s),type:'winddown',label:'Wind-down',why:'Screens away so sleep comes easier.'}],
+  tips:['Charge your phone outside the bedroom.','Turn off non-essential notifications.','Keep the same wake time every day.']};
+}
+
+async function api(path,body){const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(await r.text());return r.json()}
+
+function render(pl,src){
+  plan=pl;$('#out').hidden=false;
+  const w=toMin(profile.wake);let s=toMin(profile.sleep);if(s<=w)s+=1440;
+  const bl=(pl.blocks||[]).map(b=>{let a=toMin(b.start),e=toMin(b.end);if(a<w)a+=1440;if(e<=a)e+=1440;return{...b,a:Math.max(a,w),e:Math.min(e,s)}}).filter(b=>Number.isFinite(b.a)&&Number.isFinite(b.e)&&b.e>b.a).sort((x,y)=>x.a-y.a);
+  const f=[];let c=w;
+  for(const b of bl){if(b.a<c)b.a=c;if(b.e<=b.a)continue;if(b.a>c)f.push({a:c,e:b.a,type:'free',label:'Free time'});if(!['focus','offline','winddown','free'].includes(b.type))b.type='free';f.push(b);c=b.e}
+  if(c<s)f.push({a:c,e:s,type:'free',label:'Free time'});
+  const bar=$('#bar');bar.replaceChildren(...f.map(b=>el('div',{class:'seg '+b.type,style:'flex:'+(b.e-b.a),title:b.label+' '+fmt(b.a)+'–'+fmt(b.e)},(b.e-b.a)>=90?String(b.label).slice(0,14):'')));
+  $('#ax').replaceChildren(el('span',{},fmt(w)),el('span',{},fmt(s)));
+  $('#rows').replaceChildren(...f.map(b=>el('div',{class:'row'},el('div',{class:'tm'},fmt(b.a)+' – '+fmt(b.e)),el('div',{},el('b',{},String(b.label||'Block')),el('span',{class:'pill seg '+b.type},b.type),b.why?el('p',{},String(b.why)):''))));
+  const sc=Math.max(0,Math.min(100,Math.round(Number(pl.score)||0)));
+  $('#sc').textContent=sc;$('#ring').setAttribute('stroke-dasharray',(sc/100*327)+' 327');
+  $('#sum').textContent=pl.summary||'';$('#tr').textContent=pl.trace&&pl.trace.length?'Agent steps: '+pl.trace.join(' → '):'';
+  $('#src').textContent=src==='ai'?'BUILT BY THE AI AGENT':'BACKUP PLANNER · AGENT SERVER UNAVAILABLE';
+  $('#tips').replaceChildren(...(pl.tips||[]).slice(0,4).map(t=>el('li',{},String(t))));
+  $('#out').scrollIntoView({behavior:'smooth'});
+}
+
+$('#f').addEventListener('submit',async e=>{
+  e.preventDefault();
+  profile={wake:$('#wake').value,sleep:$('#sleep').value,ws:$('#ws').value,we:$('#we').value,hrs:Number($('#hrs').value),prob:$('#prob').value,goal:$('#goal').value.trim()};
+  const b=$('#go'),st=$('#st');b.disabled=true;st.textContent='The AI is building your rhythm…';
+  try{const r=await api('/api/plan',{profile});if(r&&Array.isArray(r.blocks)){render(r,'ai');st.textContent='Done.'}else{render(localPlan(profile),'local');st.textContent='Used the built-in planner.'}}
+  catch(err){render(localPlan(profile),'local');st.textContent='The AI could not answer, so the built-in planner was used.'}
+  b.disabled=false;
+});
+
+$('#ci').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const fb=$('#fb').value.trim(),b=$('#ad'),st=$('#st2');
+  if(!fb){st.textContent='Write a short check-in first.';return}
+  b.disabled=true;st.textContent='The AI is adapting your plan…';
+  try{const r=await api('/api/adapt',{profile,plan,feedback:fb});
+    if(r&&Array.isArray(r.blocks)){render(r,'ai');st.textContent='Plan updated.'}else st.textContent='The agent server did not return a plan.'}
+  catch(err){st.textContent='The AI could not adapt the plan. Try again in a moment.'}
+  b.disabled=false;
+});
+</script>
+</body>
+</html>
